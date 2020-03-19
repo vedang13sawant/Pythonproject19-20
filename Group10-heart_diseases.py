@@ -68,8 +68,8 @@ corrlt=sn.heatmap(corr,cmap='coolwarm')
 plt.title("Correlation")
 plt.show()
 #scatter plot 
-ax = sn.scatterplot(x='age',y='Cholestrol',palette='magma',data=data)
-sn.lmplot(x='age', y='Cholestrol',  data=data, palette ='magma', height = 8)
+ax = sn.scatterplot(x='age',y='Cholestrol',data=data,hue='sex')
+sn.lmplot(x='age', y='Cholestrol',  data=data,  height = 8,hue='sex')
 ax.set_title('Scatter plot of age and cholestrol level')
 plt.show()
 #box plot for outlier detection
