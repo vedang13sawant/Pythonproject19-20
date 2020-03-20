@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-
+from scipy.stats import zscore
 # reading the csv file and loading it into dataframe
 data=pd.read_csv("C:\\Users\\vedan\\Desktop\\heart.csv")
 #getting statistical values like count mean max min etc without categorical variables
@@ -57,14 +57,23 @@ data['thal_cat']=lk_thal
 print("categorical variable")
 print(data.iloc[:,[1,14,5,15,8,16,12,17]])
 
-
+q1 = data['Cholestrol'].quantile(0.25)
+q3 = data['Cholestrol'].quantile(0.75)
+iqr = q3-q1 #Interquartile range
+fence_low  = q1-1.5*iqr
+fence_high = q3+1.5*iqr
+data= data.loc[(data['Cholestrol'] > fence_low) & (data['Cholestrol'] < fence_high)]
+X = data.boxplot( column =['Resting BP'])
+plt.title("Outliers-Resting BP")
+plt.show()
 
 #viewing all columns
 print(data.columns)
 # correlation
 corr=data.drop(['sex', 'FBS','Exang','thal','sex_cat','FBS_cat','exang_cat','thal_cat'], axis = 1).corr()
 print(corr)
-corrlt=sn.heatmap(corr,cmap='coolwarm')
+fig= plt.figure(figsize=(12,12))
+corrlt=sn.heatmap(corr,annot=True,cmap='coolwarm')
 plt.title("Correlation")
 plt.show()
 #scatter plot 
@@ -91,6 +100,20 @@ sn.catplot(x='AHD', kind="count",hue = 'sex', palette="Blues", data=data)
 plt.subplots_adjust(top=0.9)
 plt.title("Number of Male /Female with diagnosis of HD")
 plt.show()
+
+df=data.drop(['sex', 'FBS','Exang','thal'],axis=1)
+
+
+q1 = data['Resting BP'].quantile(0.25)
+q3 = data['Resting BP'].quantile(0.75)
+iqr = q3-q1 #Interquartile range
+fence_low  = q1-1.5*iqr
+fence_high = q3+1.5*iqr
+data= data.loc[(df['Resting BP'] > fence_low) & (df['Resting BP'] < fence_high)]
+X = data.boxplot( column =['Resting BP'])
+plt.title("Outliers-Resting BP")
+plt.show()
+
 
 #dividing dataset into train and test
 
